@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Database\Events\MigrationsEnded;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->listenToMigrationsEndedEvent();
     }
 
     /**
@@ -24,5 +28,18 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+    }
+
+    protected function listenToMigrationsEndedEvent()
+    {
+        if (App::isLocal()) {
+            Event::listen(MigrationsEnded::class, function ($event) {
+                Artisan::call('ide-helper:models', [
+                    '--write' => true,
+                    '--reset' => true,
+                    '--no-interaction' => true,
+                ]);
+            });
+        }
     }
 }
