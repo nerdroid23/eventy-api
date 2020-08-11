@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -23,6 +24,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  */
 class User extends Authenticatable
 {
+    use HasApiTokens;
+
     protected $fillable = [
         'name', 'email', 'password',
     ];
