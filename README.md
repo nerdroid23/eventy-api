@@ -1,1 +1,1 @@
-## Back end for my event management app
+## api for my event management app
